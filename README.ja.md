@@ -30,7 +30,7 @@ npx skills@latest add otnc/agent-skills --skill example-skill
 
 ## リリース
 
-初回は `0.1.0` を使えます。次回からは `npm version patch --no-git-tag-version` など、変更内容に応じたコマンドでバージョンを更新します。バージョンとスキルの変更をデフォルトブランチにプッシュし、そのブランチで **release** ワークフローを実行します。CI と同じチェックを通過すると、`v<version>` タグとコミット履歴から作ったリリースノートを付けて GitHub Release を公開します。
+次回以降のリリースでは、`npm version patch --no-git-tag-version` などでバージョンを更新します。変更をデフォルトブランチにプッシュし、そのブランチを選んで **Actions → release → Run workflow** を開きます。`version` には `package.json` と同じ値を `v` を付けずに入力します。初回なら `0.1.0` です。CI と同じチェックが通り、入力値が `package.json` と一致したら、`v<version>` タグとコミット履歴から作ったリリースノートを付けて GitHub Release を公開します。
 
 公開の `otnc/skills_*` リポジトリは、安定版リリースの公開後に [agent-skills の同期処理](https://github.com/otnc/agent-skills/blob/main/CONTRIBUTING.ja.md) で検出されます。
 
