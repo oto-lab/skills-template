@@ -1,0 +1,25 @@
+{
+  "name": "skills_example-skill",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Template for an otnc Agent Skills source repository.",
+  "license": "MIT",
+  "author": "[author]",
+  "type": "module",
+  "engines": {
+    "node": ">=22.20.0"
+  },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "skills:list": "skills add . --list",
+    "docs:build": "kiritan build",
+    "docs:check": "kiritan check",
+    "docs:verify": "kiritan verify",
+    "check": "npm run validate && npm run docs:verify && npm run docs:check && npm run skills:list"
+  },
+  "devDependencies": {
+    "kiritan": "0.7.1",
+    "skills": "1.8.1",
+    "yaml": "2.9.1"
+  }
+}
