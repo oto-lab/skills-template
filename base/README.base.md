@@ -60,7 +60,7 @@ npx skills@latest add otnc/agent-skills --skill example-skill
 :::kiritan{locale=en}
 ## Release
 
-For later releases, run `npm version patch --no-git-tag-version` or select another version bump. Push the changes to the default branch. Run **Actions → release → Run workflow** on that branch and enter the `package.json` version without the leading `v`, for example `0.1.0`. The workflow runs the same checks as CI, confirms the version matches `package.json`, and publishes a GitHub Release with a `v<version>` tag and notes from the commit history.
+Push the skill changes to the default branch. Open **Actions → release → Run workflow**, select that branch, and enter the desired version without the leading `v`, for example `0.2.0`. The workflow sets that version in `package.json` and `package-lock.json` and runs the same checks as CI. It commits any version changes to the default branch, tags the release commit, and publishes a GitHub Release with notes from the commit history.
 
 The [aggregation workflow](https://github.com/otnc/agent-skills/blob/main/CONTRIBUTING.md) discovers public `otnc/skills_*` repositories after a stable release is published.
 :::
@@ -68,7 +68,7 @@ The [aggregation workflow](https://github.com/otnc/agent-skills/blob/main/CONTRI
 :::kiritan{locale=ja}
 ## リリース
 
-次回以降のリリースでは、`npm version patch --no-git-tag-version` などでバージョンを更新します。変更をデフォルトブランチにプッシュし、そのブランチを選んで **Actions → release → Run workflow** を開きます。`version` には `package.json` と同じ値を `v` を付けずに入力します。初回なら `0.1.0` です。CI と同じチェックが通り、入力値が `package.json` と一致したら、`v<version>` タグとコミット履歴から作ったリリースノートを付けて GitHub Release を公開します。
+スキルの変更をデフォルトブランチにプッシュします。**Actions → release → Run workflow** を開き、そのブランチを選んで `0.2.0` のように `v` を付けずにバージョンを入力します。ワークフローが `package.json` と `package-lock.json` を入力値に合わせて更新し、CI と同じチェックを実行します。チェックが通ると、バージョンの変更をデフォルトブランチにコミットし、そのコミットにタグを付けて GitHub Release を公開します。リリースノートにはコミット履歴を使います。
 
 公開の `otnc/skills_*` リポジトリは、安定版リリースの公開後に [agent-skills の同期処理](https://github.com/otnc/agent-skills/blob/main/CONTRIBUTING.ja.md) で検出されます。
 :::

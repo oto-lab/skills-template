@@ -28,8 +28,7 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
-      - run: npm run check
-      - name: Check release version
+      - name: Set release version
         env:
           RELEASE_VERSION: ${{ inputs.version }}
         shell: bash
@@ -39,11 +38,8 @@ jobs:
             exit 1
           fi
 
-          package_version="$(node -p "require('./package.json').version")"
-          if [[ "$package_version" != "$RELEASE_VERSION" ]]; then
-            echo "package.json is $package_version, expected $RELEASE_VERSION."
-            exit 1
-          fi
+          npm version "$RELEASE_VERSION" --no-git-tag-version --allow-same-version --ignore-scripts
+      - run: npm run check
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -52,18 +48,30 @@ jobs:
         run: |
           tag="v$RELEASE_VERSION"
           if existing_commit="$(git rev-parse --verify "refs/tags/$tag^{commit}" 2>/dev/null)"; then
-            if [[ "$existing_commit" != "$GITHUB_SHA" ]]; then
+            # A retry can start on the original commit after the version commit and tag were pushed.
+            if [[ "$existing_commit" != "$GITHUB_SHA" ]] &&
+               { [[ "$(git rev-parse "$existing_commit^" 2>/dev/null)" != "$GITHUB_SHA" ]] ||
+                 ! git diff --quiet "$existing_commit" --; }; then
               echo "$tag already points to $existing_commit."
               exit 1
             fi
+            release_commit="$existing_commit"
           else
-            git push origin "$GITHUB_SHA:refs/tags/$tag"
+            if ! git diff --quiet -- package.json package-lock.json; then
+              git config user.name 'github-actions[bot]'
+              git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+              git add -- package.json package-lock.json
+              git commit -m "release: $tag"
+            fi
+
+            release_commit="$(git rev-parse HEAD)"
+            git push --atomic origin "HEAD:refs/heads/$GITHUB_REF_NAME" "HEAD:refs/tags/$tag"
           fi
 
           # Exclude this tag so a retry produces the same release notes.
-          range="$GITHUB_SHA"
-          if previous_tag="$(git describe --tags --abbrev=0 --match 'v[0-9]*' --exclude "$tag" "$GITHUB_SHA" 2>/dev/null)"; then
-            range="$previous_tag..$GITHUB_SHA"
+          range="$release_commit"
+          if previous_tag="$(git describe --tags --abbrev=0 --match 'v[0-9]*' --exclude "$tag" "$release_commit" 2>/dev/null)"; then
+            range="$previous_tag..$release_commit"
           fi
           notes="$RUNNER_TEMP/skill-release-notes.md"
           {

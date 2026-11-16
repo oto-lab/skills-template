@@ -30,7 +30,7 @@ npx skills@latest add otnc/agent-skills --skill example-skill
 
 ## Release
 
-For later releases, run `npm version patch --no-git-tag-version` or select another version bump. Push the changes to the default branch. Run **Actions → release → Run workflow** on that branch and enter the `package.json` version without the leading `v`, for example `0.1.0`. The workflow runs the same checks as CI, confirms the version matches `package.json`, and publishes a GitHub Release with a `v<version>` tag and notes from the commit history.
+Push the skill changes to the default branch. Open **Actions → release → Run workflow**, select that branch, and enter the desired version without the leading `v`, for example `0.2.0`. The workflow sets that version in `package.json` and `package-lock.json` and runs the same checks as CI. It commits any version changes to the default branch, tags the release commit, and publishes a GitHub Release with notes from the commit history.
 
 The [aggregation workflow](https://github.com/otnc/agent-skills/blob/main/CONTRIBUTING.md) discovers public `otnc/skills_*` repositories after a stable release is published.
 
